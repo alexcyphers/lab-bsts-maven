@@ -294,7 +294,23 @@ public class SimpleBST<K, V> implements SimpleMap<K, V> {
    */
   @Override
   public void forEach(BiConsumer<? super K, ? super V> action) {
-    // STUB
+    forEachHelper(root, action);
+  } // forEach
+
+    /**
+   * Apply a procedure to each key/value pair.
+   *
+   * @param action
+   *   The action to perform for each key/value pair.
+   */
+  private void forEachHelper(BSTNode<K,V> node, BiConsumer<? super K, ? super V> action) {
+    if (node == null) {
+      return;
+    } else {
+      forEachHelper(node.left, action);
+      action.accept(node.key, node.value);
+      forEachHelper(node.right, action);
+    } // if/else
   } // forEach
 
   // +----------------------+----------------------------------------
