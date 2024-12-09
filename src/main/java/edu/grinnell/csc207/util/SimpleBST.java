@@ -100,21 +100,30 @@ public class SimpleBST<K, V> implements SimpleMap<K, V> {
       return null;
     }
 
-    BSTNode<K,V> node = root;
-    int comp = order.compare(key, node.key);
+    BSTNode<K,V> current = root;
+    while(true) {
+      int comp = order.compare(key, current.key);
 
-    if (comp < 0) {
-      node.left = new BSTNode<>(key, value);
-      size++;
-    } else if (comp > 0) {
-      node.left = new BSTNode<>(key, value);
-      size++;
-    } else { // key == node.key
-      node.value = value;
-      size++;
+      if (comp == 0) {
+        V oldValue = current.value;
+        oldValue = current.value;
+        return oldValue;
+      } else if (comp < 0) {
+        if (current.left == null) {
+          current.left = new BSTNode<>(key, value);
+          size++;
+        } else {
+          current = current.left;
+        }
+      } else {
+        if (current.right == null) {
+          current.right = new BSTNode<>(key, value);
+          size++;
+        } else {
+          current = current.right;
+        }
+      }
     }
-
-    return node.value;
   } // set(K, V)
 
   /**
@@ -178,6 +187,17 @@ public class SimpleBST<K, V> implements SimpleMap<K, V> {
   } // remove(K)
 
 
+  /**
+   * Helps remove the value with the given key by recursively
+   * searching for the key.
+   * 
+   * @param node
+   *    The current node being checked.
+   * @param key
+   *    The key to remove
+   * @return The next node to be checked or the node to remove
+   *    if the key matches.
+   */
   private BSTNode<K,V> removeHelper(BSTNode<K,V> node, K key) {
     if (node == null) {
       cachedValue = null;
