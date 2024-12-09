@@ -7,7 +7,7 @@ import java.io.PrintWriter;
 /**
  * A set of simple experiments with SimpleBSTs.
  *
- * @author Your Name Here
+ * @author Alex Cyphers
  * @author Your Name Here
  * @author Samuel A. Rebelsky
  */

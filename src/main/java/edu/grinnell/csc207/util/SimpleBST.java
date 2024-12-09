@@ -89,7 +89,32 @@ public class SimpleBST<K, V> implements SimpleMap<K, V> {
    */
   @Override
   public V set(K key, V value) {
-    return null;        // STUB
+
+    if(key == null) {
+      throw new NullPointerException("Key is null");
+    }
+
+    if(root == null) {
+      root = new BSTNode<>(key, value);
+      size++;
+      return null;
+    }
+
+    BSTNode<K,V> node = root;
+    int comp = order.compare(key, node.key);
+
+    if (comp < 0) {
+      node.left = new BSTNode<>(key, value);
+      size++;
+    } else if (comp > 0) {
+      node.left = new BSTNode<>(key, value);
+      size++;
+    } else { // key == node.key
+      node.value = value;
+      size++;
+    }
+
+    return node.value;
   } // set(K, V)
 
   /**
@@ -118,7 +143,7 @@ public class SimpleBST<K, V> implements SimpleMap<K, V> {
    */
   @Override
   public int size() {
-    return 0;           // STUB
+    return this.size;
   } // size()
 
   /**
@@ -145,8 +170,47 @@ public class SimpleBST<K, V> implements SimpleMap<K, V> {
    */
   @Override
   public V remove(K key) {
-    return null;        // STUB
+    if (key == null) {
+      throw new NullPointerException("Key is null");
+    } // if
+    root = removeHelper(root, key);
+    return cachedValue;
   } // remove(K)
+
+
+  private BSTNode<K,V> removeHelper(BSTNode<K,V> node, K key) {
+    if (node == null) {
+      cachedValue = null;
+      return null;
+    } else {
+      cachedValue = node.value;
+      int comp = order.compare(key, node.key);
+
+      if (comp < 0) {
+        node.left = removeHelper(node.left, key);
+      } else if (comp > 0) {
+        node.right = removeHelper(node.right, key);
+      } else {
+        if (node.left == null && node.right == null) {
+          return null;
+        } else if (node.left == null) {
+          return node.right;
+        } else if (node.right == null) {
+          return node.left;
+        } // if/else
+
+        BSTNode<K,V> temp = node.left;
+        // Find furthest node to the right in the left subtree
+        while (temp.right != null) {
+        temp = temp.right;
+        } // while-loop
+        node.key = temp.key;
+        node.value = temp.value;
+        node.left = removeHelper(node.left, temp.key);
+      } // if/else
+    } // if/else
+    return node;
+  } // removeHelper(BSTNode<K,V>, K)
 
   /**
    * Get an iterator for all of the keys in the map.
